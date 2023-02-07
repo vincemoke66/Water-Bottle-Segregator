@@ -1,7 +1,8 @@
 #include <LiquidCrystal_I2C.h>
 
 // INPUT DEFINITIONS
-#define ULTRASONIC    A0 // TODO: update ultrasonic sensor pins to 2 pins
+#define TRIG_PIN 9 
+#define ECHO_PIN 10 
 #define INDUCTIVE1    0
 #define INDUCTIVE2    1
 #define CAPACITIVE1   2
@@ -13,9 +14,11 @@
 #define MOTOR2    6
 
 // RANGE AND DURATION DEFINITIONS
-#define CD_PLASTIC  3000
-#define CD_METAL    5000
-#define BOUNDARY    1000
+const int CD_PLASTIC = 3000;
+const int CD_METAL = 5000;
+const int PLACEMENT_BOUNDARY = 40;
+
+int distance = 0;
 
 enum machine_stats {
   ERROR,
@@ -41,12 +44,13 @@ unsigned long segregating_time = millis();
 bool hasDisplayed = false;
 
 void setup() {
-  pinMode(ULTRASONIC, INPUT);
   pinMode(INDUCTIVE1, INPUT);
   pinMode(INDUCTIVE2, INPUT);
   pinMode(CAPACITIVE1, INPUT);
   pinMode(CAPACITIVE2, INPUT);
+  pinMode(ECHO_PIN, INPUT);
 
+  pinMode(TRIG_PIN, OUTPUT);
   pinMode(CONVEYOR, OUTPUT);
   pinMode(MOTOR1, OUTPUT);
   pinMode(MOTOR2, OUTPUT);
