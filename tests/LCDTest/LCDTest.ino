@@ -1,6 +1,3 @@
-/* www.electronicsprojectshub.com */
-/*Import following Libraries*/
-#include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 //I2C pins declaration
 LiquidCrystal_I2C lcd(0x27, 16, 2);
