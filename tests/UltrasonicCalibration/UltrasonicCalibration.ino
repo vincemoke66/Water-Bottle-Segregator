@@ -1,7 +1,6 @@
 #include <LiquidCrystal_I2C.h>
 
 // PIN DEFINITIONS
-#define US_SENSOR A0
 #define TRIG_PIN 9
 #define ECHO_PIN 10
 
@@ -11,7 +10,6 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 int placement_gap = 0;
 
 void setup() {
-    pinMode(US_SENSOR, INPUT);
     pinMode(TRIG_PIN, OUTPUT);
     pinMode(ECHO_PIN, INPUT);
 
