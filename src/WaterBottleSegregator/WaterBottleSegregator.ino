@@ -18,7 +18,7 @@ const int CD_PLASTIC = 3000;
 const int CD_METAL = 5000;
 const int PLACEMENT_BOUNDARY = 40;
 
-int distance = 0;
+int placement_gap = 0;
 
 enum machine_stats {
   ERROR,
@@ -60,7 +60,6 @@ void setup() {
 
   lcd.init();
   lcd.backlight();
-  lcd.begin(16, 2);
 }
 
 void loop() {
