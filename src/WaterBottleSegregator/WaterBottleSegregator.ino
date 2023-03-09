@@ -131,3 +131,16 @@ void loop() {
     segregating_time = current_time;
   }
 }
+
+void readPlacementGap() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  int duration = pulseIn(ECHO_PIN, HIGH);
+
+  placement_gap = duration * 0.034 / 2;
+}
