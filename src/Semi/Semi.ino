@@ -60,6 +60,11 @@ bool hasDisplayed = false;
 Servo gateServo;
 Servo flipperServo;
 
+const int FLIPPER_OPEN = 180;
+const int FLIPPER_CLOSE = 0;
+const int GATE_OPEN = 180;
+const int GATE_CLOSE = 0;
+
 void setup() {
     // Setting input sensors 
     pinMode(INDUCTIVE1_PIN, INPUT);
@@ -123,7 +128,7 @@ void loop() {
 
         // sets 2-second delay for lesser error of bottle identification
         if (millis() - waiting_time > 2000) {
-            material = (digitalRead(INDUCTIVE1_PIN) > 0) ? METAL : PLASTIC;
+            material = ((digitalRead(INDUCTIVE1_PIN) > 0) || (digitalRead(INDUCTIVE2_PIN) > 0)) ? METAL : PLASTIC;
             status = SEGREGATIING;
             hasDisplayed = false;
         }
@@ -144,17 +149,37 @@ void loop() {
         }
 
         unsigned long interval = millis() - identifying_time;
+
         if ((interval > CD_METAL && material == METAL) || (interval > CD_PLASTIC && material == PLASTIC)) {
-        status = WAITING;
-        hasDisplayed = false;
-        lcd.clear();
-        lcd.setCursor(5, 0);
-        lcd.print("BOTTLE");
-        lcd.setCursor(3, 1);
-        lcd.print("SEGREGATED!");
-        delay(2000);
+            status = WAITING;
+            hasDisplayed = false;
+            lcd.clear();
+            lcd.setCursor(5, 0);
+            lcd.print("BOTTLE");
+            lcd.setCursor(3, 1);
+            lcd.print("SEGREGATED!");
+            delay(2000);
         }
+
         segregating_time = millis();
+    }
+}
+
+void segregate(bool isMetal) {
+    // flipper should open if water bottle is metal
+    if (isMetal) flipperServo.write(FLIPPER_OPEN);
+
+    // open gate after identifying if flipper should be open or not
+    gateServo.write(GATE_OPEN);
+    delay(100);
+
+    // start conveyor
+    digitalWrite(CONVEYOR_RELAY_PIN, LOW);
+
+    // if duration is reached
+        // close gate
+    if (isMetal) {
+        
     }
 }
 
