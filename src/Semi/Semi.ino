@@ -113,32 +113,34 @@ void loop() {
     /// IDENTIFYING
     if (status == IDENTIFYING) {
         if (!hasDisplayed) {
-        lcd.clear();
-        lcd.setCursor(2, 0);
-        lcd.print("Identifying");
-        lcd.setCursor(3, 1);
-        lcd.print("Bottle...");
-        hasDisplayed = true;
+            lcd.clear();
+            lcd.setCursor(2, 0);
+            lcd.print("Identifying");
+            lcd.setCursor(3, 1);
+            lcd.print("Bottle...");
+            hasDisplayed = true;
         }
 
+        // sets 2-second delay for lesser error of bottle identification
         if (millis() - waiting_time > 2000) {
-        material = (digitalRead(INDUCTIVE1) > 0) ? METAL : PLASTIC;
-        status = SEGREGATIING;
-        hasDisplayed = false;
+            material = (digitalRead(INDUCTIVE1_PIN) > 0) ? METAL : PLASTIC;
+            status = SEGREGATIING;
+            hasDisplayed = false;
         }
+
         identifying_time = millis();
     }
 
     /// SEGREGATING METAL
     if (status == SEGREGATIING) {
         if (!hasDisplayed) {
-        lcd.clear();
-        lcd.setCursor(2, 0);
-        lcd.print("Segregating");
-        lcd.setCursor(2, 1);
-        const char* content = (material == METAL) ? "METAL BOTTLE" : "PLASTIC BOTTLE"; 
-        lcd.print(content);
-        hasDisplayed = true;
+            lcd.clear();
+            lcd.setCursor(2, 0);
+            lcd.print("Segregating");
+            lcd.setCursor(2, 1);
+            const char* content = (material == METAL) ? "METAL BOTTLE" : "PLASTIC BOTTLE"; 
+            lcd.print(content);
+            hasDisplayed = true;
         }
 
         unsigned long interval = millis() - identifying_time;
