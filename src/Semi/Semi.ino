@@ -107,6 +107,7 @@ void loop() {
         }
 
         readPlacementGap();
+
         if (placement_gap < PLACEMENT_BOUNDARY) {
             status = IDENTIFYING;
             hasDisplayed = false;            
@@ -148,9 +149,11 @@ void loop() {
             hasDisplayed = true;
         }
 
+        segregate(material == METAL);
+
         unsigned long interval = millis() - identifying_time;
 
-        if ((interval > CD_METAL && material == METAL) || (interval > CD_PLASTIC && material == PLASTIC)) {
+        if ((interval > METAL_DURATION && material == METAL) || (interval > PLASTIC_DURATION && material == PLASTIC)) {
             status = WAITING;
             hasDisplayed = false;
             lcd.clear();
@@ -167,7 +170,10 @@ void loop() {
 
 void segregate(bool isMetal) {
     // flipper should open if water bottle is metal
-    if (isMetal) flipperServo.write(FLIPPER_OPEN);
+    if (isMetal) {
+        flipperServo.write(FLIPPER_OPEN);
+        delay(100);
+    }
 
     // open gate after identifying if flipper should be open or not
     gateServo.write(GATE_OPEN);
@@ -176,21 +182,17 @@ void segregate(bool isMetal) {
     // start conveyor
     digitalWrite(CONVEYOR_RELAY_PIN, LOW);
 
-    // if duration is reached
-        // close gate
-    if (isMetal) {
-        
-    }
+    int duration = (isMetal) ? METAL_DURATION : PLASTIC_DURATION;
+    delay(duration);
+
+    // close gate
+    closeServos();
+    delay(100);
 }
 
-void readSensors() {
-    // read front ultrasonic sensor
-    // read plastic ultrasonic sensor
-    // read metal ultrasonic sensor
-    // read inductive1 sensor
-    // read inductive2 sensor
-    // read conductive1 sensor
-    // read conductive2 sensor
+void closeServos() {
+    flipperServo.write(FLIPPER_CLOSE);
+    gateServo.write(GATE_CLOSE);
 }
 
 void readPlacementGap() {
