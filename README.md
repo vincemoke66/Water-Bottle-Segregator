@@ -1,5 +1,7 @@
 # Water Bottle Segregator
+
 ## TODO
+- [ ] update 
 
 ## IN-PROGRESS
 
@@ -23,3 +25,6 @@
 ## Library dependencies in each projects
 ### LCDTest
 `Liquid Crystal I2C` by Frank de Brabander 
+
+## LCD Prompts 
+![LCD Prompts](LCDPrompts.png "LCD Prompts")
