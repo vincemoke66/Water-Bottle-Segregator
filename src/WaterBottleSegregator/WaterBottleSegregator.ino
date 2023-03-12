@@ -1,14 +1,12 @@
 #include <LiquidCrystal_I2C.h>
 
-// INPUT DEFINITIONS
+// PIN CONFIGURATIONS
 #define TRIG_PIN 9 
 #define ECHO_PIN 10 
 #define INDUCTIVE1    0
 #define INDUCTIVE2    1
 #define CAPACITIVE1   2
 #define CAPACITIVE2   3
-
-// OUTPUT DEFINITIONS
 #define CONVEYOR  4
 #define MOTOR1    5
 #define MOTOR2    6

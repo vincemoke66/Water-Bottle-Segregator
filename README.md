@@ -1,4 +1,16 @@
 # Water Bottle Segregator
+## TODO
+
+## IN-PROGRESS
+
+## FOR TESTING
+
+## COMPLETED
+
+## NOTES
+
+## SUGGESTIONS
+
 ## How to run tests?
 1. Download the whole repository `Water-Bottle-Segregator`
 2. Open `tests` folder and navigate to desired test to run.
