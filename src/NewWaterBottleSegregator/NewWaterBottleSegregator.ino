@@ -1,6 +1,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Servo.h>
 
+/* PIN CONFIGURATION */
 #define CONVEYOR_RELAY_PIN 8
 #define GATE_PIN 9
 #define FLIPPER_PIN 10
@@ -15,6 +16,10 @@
 
 #define CAPACITIVE1_PIN 11
 #define CAPACITIVE2_PIN 12
+
+/* LCD PINS */
+/* A4 -> SDA */
+/* A5 -> SCL */
 
 /* FOR TESTING */
 // change the value to "PLASTIC" or "METAL" depending on what 
