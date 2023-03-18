@@ -53,8 +53,8 @@ void setup() {
     Serial.begin(9600);
 
     // initializing LCD
-    // lcd.init();
-    // lcd.backlight();
+    lcd.begin();
+    lcd.backlight();
 
     // sets conveyor relay as output
     pinMode(CONVEYOR_RELAY_PIN, OUTPUT);
@@ -87,12 +87,11 @@ void setup() {
 
 void loop() {
     // display lcd for inserting bottle 
-    /* TODO */ 
-    // lcd.clear();
-    // lcd.setCursor(2, 0);
-    // lcd.print("PLEASE INSERT");
-    // lcd.setCursor(4, 1);
-    // lcd.print("A BOTTLE.");
+    lcd.clear();
+    lcd.setCursor(2, 0);
+    lcd.print("PLEASE INSERT");
+    lcd.setCursor(4, 1);
+    lcd.print("A BOTTLE.");
 
     // check for bottle placement
     readPlacementDistance();
@@ -107,12 +106,11 @@ void loop() {
     Serial.println("Identifying bottle..."); // for debugging 
 
     // display lcd for identifying bottle 
-    /* TODO */ 
-    // lcd.clear();
-    // lcd.setCursor(2, 0);
-    // lcd.print("IDENTIFYING");
-    // lcd.setCursor(5, 1);
-    // lcd.print("BOTTLE");
+    lcd.clear();
+    lcd.setCursor(2, 0);
+    lcd.print("IDENTIFYING");
+    lcd.setCursor(5, 1);
+    lcd.print("BOTTLE");
 
     // if bottle has been placed
     delay(1500); // added a delay for proper identification
@@ -124,12 +122,11 @@ void loop() {
     Serial.println("\n\nSegregating bottle..."); // for debugging 
 
     // display lcd for segregating bottle with correct identified material
-    /* TODO */ 
-    // lcd.clear();
-    // lcd.setCursor(2, 0);
-    // lcd.print("SEGREGATING");
-    // lcd.setCursor(4, 1);
-    // lcd.print(bottleToSegregate);
+    lcd.clear();
+    lcd.setCursor(2, 0);
+    lcd.print("SEGREGATING");
+    lcd.setCursor(4, 1);
+    lcd.print(bottleToSegregate);
 
     segregate(bottleToSegregate == "METAL");
     delay(2000);
@@ -141,12 +138,11 @@ void loop() {
     flipperServo.write(FLIPPER_CLOSE);
 
     // display lcd for segregating bottle complete
-    /* TODO */ 
-    // lcd.clear();
-    // lcd.setCursor(2, 0);
-    // lcd.print("SEGREGATION");
-    // lcd.setCursor(3, 1);
-    // lcd.print("COMPLETE!");
+    lcd.clear();
+    lcd.setCursor(2, 0);
+    lcd.print("SEGREGATION");
+    lcd.setCursor(3, 1);
+    lcd.print("COMPLETE!");
     delay(2000);
 }
 
