@@ -46,6 +46,67 @@ int metal_bin_distance = 0;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+byte binChar[8] = {
+	0b00000,
+	0b00000,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b01110
+};
+byte bin1Char[8] = {
+	0b00000,
+	0b00000,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b11111,
+	0b01110
+};
+byte bin2Char[8] = {
+	0b00000,
+	0b00000,
+	0b10001,
+	0b10001,
+	0b10001,
+	0b11111,
+	0b11111,
+	0b01110
+};
+byte bin3Char[8] = {
+	0b00000,
+	0b00000,
+	0b10001,
+	0b10001,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b01110
+};
+byte bin4Char[8] = {
+	0b00000,
+	0b00000,
+	0b10001,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b01110
+};
+byte bin5Char[8] = {
+	0b00000,
+	0b00000,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b11111,
+	0b01110
+};
+
 Servo gateServo;
 Servo flipperServo;
 
@@ -53,8 +114,16 @@ void setup() {
     Serial.begin(9600);
 
     // initializing LCD
-    lcd.begin();
+    lcd.init();
     lcd.backlight();
+    
+    // creating trash bin characters
+    lcd.createChar(0, binChar);
+    lcd.createChar(1, bin1Char);
+    lcd.createChar(2, bin2Char);
+    lcd.createChar(3, bin3Char);
+    lcd.createChar(4, bin4Char);
+    lcd.createChar(5, bin5Char);
 
     // sets conveyor relay as output
     pinMode(CONVEYOR_RELAY_PIN, OUTPUT);
@@ -86,6 +155,9 @@ void setup() {
 }
 
 void loop() {
+    // read trash bins capacity 
+    readTrashBinDistances();
+
     // display lcd for inserting bottle 
     lcd.clear();
     lcd.setCursor(2, 0);
@@ -116,9 +188,28 @@ void loop() {
     delay(1500); // added a delay for proper identification
     identifyBottle();
 
+
     Serial.println("Bottle identified!"); // for debugging 
     Serial.print("Material: "); // for debugging 
     Serial.println(bottleToSegregate); // for debugging 
+
+    // if bottle to segregate is plastic and plastic bin is full
+    if (plastic_bin_distance < PLASTIC_BIN_THRESHOLD && bottleToSegregate == "PLASTIC") {
+        while (placement_distance < PLACEMENT_THRESHOLD) {
+            lcd.clear();
+            displayTrashBinFullWarning(1);
+        }
+        return;
+    }
+    // if bottle to segregate is metal and metal bin is full
+    if (metal_bin_distance < METAL_BIN_THRESHOLD && bottleToSegregate == "METAL") {
+        while (placement_distance < PLACEMENT_THRESHOLD) {
+            lcd.clear();
+            displayTrashBinFullWarning(0);
+        }
+        return;
+    }
+
     Serial.println("\n\nSegregating bottle..."); // for debugging 
 
     // display lcd for segregating bottle with correct identified material
@@ -144,6 +235,42 @@ void loop() {
     lcd.setCursor(3, 1);
     lcd.print("COMPLETE!");
     delay(2000);
+}
+
+void displayTrashBinFullWarning(int isPlastic) {
+    if (isPlastic) {
+        lcd.clear();
+        lcd.setCursor(3, 0);
+        lcd.print("PLASTIC BIN");
+    }
+    else {
+        lcd.clear();
+        lcd.setCursor(4, 0);
+        lcd.print("METAL BIN");
+    }
+
+    lcd.setCursor(4, 1);
+    lcd.print("FULL ");
+
+    // displaying bin full capacity animation
+    for (int i = 0; i < 6; i++) {
+        lcd.setCursor(10, 1);
+        lcd.write(i);
+        delay(400);
+    }
+
+    // flashing empty and full bin animation
+	for (int i = 0; i < 3; i++) {
+		lcd.setCursor(10, 1);
+		lcd.write(0);
+		delay(500);
+
+		lcd.setCursor(10, 1);
+		lcd.write(5);
+		delay(500);
+	}
+
+	delay(500);
 }
 
 void identifyBottle() {
