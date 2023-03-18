@@ -27,8 +27,8 @@
 String bottleToSegregate = "METAL"; // SHOULD BE ALL CAPS
 
 // increase or decrease the value depending on the conveyor operation
-const int METAL_DURATION = 10000; // in milliseconds
-const int PLASTIC_DURATION = 10000; // in milliseconds
+const int METAL_DURATION = 15000; // in milliseconds
+const int PLASTIC_DURATION = 15000; // in milliseconds
 
 const int GATE_OPEN = 180;
 const int GATE_CLOSE = 0;
