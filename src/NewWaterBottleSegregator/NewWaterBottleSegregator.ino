@@ -150,7 +150,7 @@ void identifyBottle() {
     // if capacitive is 1, then it is metal
     int bottleCapacitive = digitalRead(CAPACITIVE1_PIN) + digitalRead(CAPACITIVE2_PIN);
 
-    Serial.print("Conductive value: ");
+    Serial.print("Capacitive value: ");
     Serial.print(bottleCapacitive);
 
     if (bottleCapacitive != 0) {
