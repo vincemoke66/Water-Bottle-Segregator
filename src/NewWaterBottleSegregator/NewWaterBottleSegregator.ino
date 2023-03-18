@@ -28,7 +28,7 @@ String bottleToSegregate = "METAL"; // SHOULD BE ALL CAPS
 
 // increase or decrease the value depending on the conveyor operation
 const int METAL_DURATION = 10000; // in milliseconds
-const int PLASTIC_DURATION = 5000; // in milliseconds
+const int PLASTIC_DURATION = 10000; // in milliseconds
 
 const int GATE_OPEN = 180;
 const int GATE_CLOSE = 0;
@@ -53,9 +53,8 @@ void setup() {
     Serial.begin(9600);
 
     // initializing LCD
-    lcd.init();
-    lcd.begin(16, 2);
-    lcd.backlight();
+    // lcd.init();
+    // lcd.backlight();
 
     // sets conveyor relay as output
     pinMode(CONVEYOR_RELAY_PIN, OUTPUT);
@@ -78,6 +77,8 @@ void setup() {
     gateServo.attach(GATE_PIN);
     flipperServo.attach(FLIPPER_PIN);
 
+    digitalWrite(CONVEYOR_RELAY_PIN, HIGH);
+
     // initially closes gate and flipper 
     gateServo.write(GATE_CLOSE);
     flipperServo.write(FLIPPER_CLOSE);
@@ -87,31 +88,31 @@ void setup() {
 void loop() {
     // display lcd for inserting bottle 
     /* TODO */ 
-    lcd.clear();
-    lcd.setCursor(2, 0);
-    lcd.print("PLEASE INSERT");
-    lcd.setCursor(4, 1);
-    lcd.print("A BOTTLE.");
+    // lcd.clear();
+    // lcd.setCursor(2, 0);
+    // lcd.print("PLEASE INSERT");
+    // lcd.setCursor(4, 1);
+    // lcd.print("A BOTTLE.");
 
     // check for bottle placement
     readPlacementDistance();
     Serial.print("Placement distance: "); // for debugging 
     Serial.println(placement_distance); 
-    delay(1000);
 
     // if bottle has not been placed
     if (placement_distance >= PLACEMENT_THRESHOLD) return;
+    delay(2500);
 
     Serial.println("Bottle has been placed!"); // for debugging 
     Serial.println("Identifying bottle..."); // for debugging 
 
     // display lcd for identifying bottle 
     /* TODO */ 
-    lcd.clear();
-    lcd.setCursor(2, 0);
-    lcd.print("IDENTIFYING");
-    lcd.setCursor(5, 1);
-    lcd.print("BOTTLE");
+    // lcd.clear();
+    // lcd.setCursor(2, 0);
+    // lcd.print("IDENTIFYING");
+    // lcd.setCursor(5, 1);
+    // lcd.print("BOTTLE");
 
     // if bottle has been placed
     delay(1500); // added a delay for proper identification
@@ -124,11 +125,11 @@ void loop() {
 
     // display lcd for segregating bottle with correct identified material
     /* TODO */ 
-    lcd.clear();
-    lcd.setCursor(2, 0);
-    lcd.print("SEGREGATING");
-    lcd.setCursor(4, 1);
-    lcd.print(bottleToSegregate);
+    // lcd.clear();
+    // lcd.setCursor(2, 0);
+    // lcd.print("SEGREGATING");
+    // lcd.setCursor(4, 1);
+    // lcd.print(bottleToSegregate);
 
     segregate(bottleToSegregate == "METAL");
     delay(2000);
@@ -141,17 +142,20 @@ void loop() {
 
     // display lcd for segregating bottle complete
     /* TODO */ 
-    lcd.clear();
-    lcd.setCursor(2, 0);
-    lcd.print("SEGREGATION");
-    lcd.setCursor(3, 1);
-    lcd.print("COMPLETE!");
+    // lcd.clear();
+    // lcd.setCursor(2, 0);
+    // lcd.print("SEGREGATION");
+    // lcd.setCursor(3, 1);
+    // lcd.print("COMPLETE!");
     delay(2000);
 }
 
 void identifyBottle() {
     // if capacitive is 1, then it is metal
     int bottleCapacitive = digitalRead(CAPACITIVE1_PIN) + digitalRead(CAPACITIVE2_PIN);
+
+    Serial.print("Conductive value: ");
+    Serial.print(bottleCapacitive);
 
     if (bottleCapacitive != 0) {
         bottleToSegregate = "METAL";
