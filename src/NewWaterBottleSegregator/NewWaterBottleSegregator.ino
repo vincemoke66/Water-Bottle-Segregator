@@ -336,7 +336,15 @@ void segregate(bool isMetal) {
 
     // operate conveyor
     digitalWrite(CONVEYOR_RELAY_PIN, LOW);
-    delay(duration);
+
+    // partial delay for closing gate 
+    delay(3000);
+
+    gateServo.write(GATE_CLOSE);
+    delay(500);
+
+    // continuation delay for the conveyor to segregate 
+    delay(duration - 3000);
 
     // turns off conveyor after the segregation duration
     digitalWrite(CONVEYOR_RELAY_PIN, HIGH);
