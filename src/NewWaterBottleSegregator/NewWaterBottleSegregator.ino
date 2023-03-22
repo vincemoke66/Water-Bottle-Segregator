@@ -46,66 +46,11 @@ int metal_bin_distance = 0;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-byte binChar[8] = {
-	0b00000,
-	0b00000,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b01110
-};
-byte bin1Char[8] = {
-	0b00000,
-	0b00000,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b11111,
-	0b01110
-};
-byte bin2Char[8] = {
-	0b00000,
-	0b00000,
-	0b10001,
-	0b10001,
-	0b10001,
-	0b11111,
-	0b11111,
-	0b01110
-};
-byte bin3Char[8] = {
-	0b00000,
-	0b00000,
-	0b10001,
-	0b10001,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b01110
-};
-byte bin4Char[8] = {
-	0b00000,
-	0b00000,
-	0b10001,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b01110
-};
-byte bin5Char[8] = {
-	0b00000,
-	0b00000,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b11111,
-	0b01110
-};
+byte binFull[] = { 0x00, 0x11, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x0E };
+byte binEmpty[] = { 0x00, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0E };
+
+byte plasticBottle[] = { 0x00, 0x0C, 0x12, 0x1E, 0x12, 0x1E, 0x1E, 0x1E };
+byte metalBottle[] = { 0x00, 0x00, 0x06, 0x09, 0x0F, 0x09, 0x09, 0x06 };
 
 Servo gateServo;
 Servo flipperServo;
@@ -118,12 +63,10 @@ void setup() {
     lcd.backlight();
     
     // creating trash bin characters
-    lcd.createChar(0, binChar);
-    lcd.createChar(1, bin1Char);
-    lcd.createChar(2, bin2Char);
-    lcd.createChar(3, bin3Char);
-    lcd.createChar(4, bin4Char);
-    lcd.createChar(5, bin5Char);
+    lcd.createChar(0, binEmpty);
+    lcd.createChar(1, binFull);
+    lcd.createChar(2, plasticBottle);
+    lcd.createChar(3, metalBottle);
 
     // sets conveyor relay as output
     pinMode(CONVEYOR_RELAY_PIN, OUTPUT);
@@ -162,8 +105,12 @@ void loop() {
     lcd.clear();
     lcd.setCursor(2, 0);
     lcd.print("PLEASE INSERT");
-    lcd.setCursor(4, 1);
-    lcd.print("A BOTTLE.");
+    lcd.setCursor(3, 1);
+    lcd.print("A BOTTLE ");
+    lcd.setCursor(12, 1);
+    lcd.write(2); // writes plastic bottle symbol
+    lcd.setCursor(13, 1);
+    lcd.write(3); // writes plastic bottle symbol
 
     // check for bottle placement
     readPlacementDistance();
