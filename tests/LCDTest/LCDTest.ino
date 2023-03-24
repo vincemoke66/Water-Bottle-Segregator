@@ -1,47 +1,32 @@
 #include <LiquidCrystal_I2C.h>
+
 //I2C pins declaration
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-unsigned long int current_time;
-unsigned long int waiting_time = millis();
-unsigned long int notWaiting_time = millis();
+/* CUSTOM CHARACTERS */
+byte binFull[] = { 0x00, 0x11, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x0E };
+byte binEmpty[] = { 0x00, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0E };
+byte plasticBottle[] = { 0x00, 0x0C, 0x12, 0x1E, 0x12, 0x1E, 0x1E, 0x1E };
+byte metalBottle[] = { 0x00, 0x00, 0x06, 0x09, 0x0F, 0x09, 0x09, 0x06 };
 
-bool isWaiting = 1;
 void setup() 
 {
   lcd.init();
-  lcd.begin(16, 2);
   lcd.backlight();
+
+  // adding custom characters 
+  lcd.createChar(0, binEmpty);
+  lcd.createChar(1, binFull);
+  lcd.createChar(2, plasticBottle);
+  lcd.createChar(3, metalBottle);
 }
 
 void loop() 
 {
-  current_time = millis();
-
-  if (isWaiting) {
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print(" Waiting..."); 
-    lcd.setCursor(0,1);
-    lcd.print("Like | Share");
-
-    if (current_time - notWaiting_time > 5000) {
-      isWaiting = false;
-    }
-    waiting_time = current_time;
-  } 
-
-  if(!isWaiting) {
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print(" Not Waiting "); 
-    lcd.setCursor(0,1);
-    lcd.print("Like | Share");
-    
-    if (current_time - waiting_time > 5000) {
-      current_time = millis();
-      isWaiting = true;
-    }
-    notWaiting_time = current_time;
-  }
+  lcd.setCursor(2, 0);
+  lcd.print("PLEASE INSERT");
+  lcd.setCursor(3, 1);
+  lcd.print("A BOTTLE ");
+  lcd.write(2);
+  lcd.write(3);
 }
