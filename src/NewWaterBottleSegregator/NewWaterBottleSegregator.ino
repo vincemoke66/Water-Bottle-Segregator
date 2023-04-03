@@ -30,8 +30,8 @@
 String bottleToSegregate = "METAL"; // SHOULD BE ALL CAPS
 
 // increase or decrease the value depending on the conveyor operation
-const int METAL_DURATION = 15000; // in milliseconds
-const int PLASTIC_DURATION = 15000; // in milliseconds
+const int METAL_DURATION = 10000; // in milliseconds
+const int PLASTIC_DURATION = 20000; // in milliseconds
 
 const int GATE_OPEN = 180;
 const int GATE_CLOSE = 0;
@@ -39,8 +39,8 @@ const int FLIPPER_OPEN = 180;
 const int FLIPPER_CLOSE = 0;
 
 const int PLACEMENT_THRESHOLD = 20;
-const int PLASTIC_BIN_THRESHOLD = 28;
-const int METAL_BIN_THRESHOLD = 28;
+const int PLASTIC_BIN_THRESHOLD = 10;
+const int METAL_BIN_THRESHOLD = 10;
 
 // DISTANCE VARIABLES
 int placement_distance = 0;
@@ -102,7 +102,12 @@ void setup() {
 
 void loop() {
     // read trash bins capacity 
-    readTrashBinDistances();
+    readMetalTrashBinDistance();
+    readPlasticTrashBinDistance();
+    Serial.print("Plastic bin distance: "); // for debugging 
+    Serial.println(plastic_bin_distance); 
+    Serial.print("Metal bin distance: "); // for debugging 
+    Serial.println(metal_bin_distance); 
 
     // display lcd for inserting bottle 
     lcd.clear();
@@ -122,7 +127,7 @@ void loop() {
 
     // if bottle has not been placed
     if (placement_distance >= PLACEMENT_THRESHOLD) return;
-    delay(2500);
+    delay(4000);
 
     Serial.println("Bottle has been placed!"); // for debugging 
     Serial.println("Identifying bottle..."); // for debugging 
@@ -169,6 +174,9 @@ void loop() {
     lcd.setCursor(4, 1);
     lcd.print(bottleToSegregate);
 
+    Serial.print("Is metal: ");
+    Serial.println(bottleToSegregate == "METAL");
+
     segregate(bottleToSegregate == "METAL");
     delay(2000);
 
@@ -202,13 +210,6 @@ void displayTrashBinFullWarning(int isPlastic) {
     lcd.setCursor(4, 1);
     lcd.print("FULL ");
 
-    // displaying bin full capacity animation
-    for (int i = 0; i < 6; i++) {
-        lcd.setCursor(10, 1);
-        lcd.write(i);
-        delay(400);
-    }
-
     // flashing empty and full bin animation
 	for (int i = 0; i < 3; i++) {
 		lcd.setCursor(10, 1);
@@ -216,7 +217,7 @@ void displayTrashBinFullWarning(int isPlastic) {
 		delay(500);
 
 		lcd.setCursor(10, 1);
-		lcd.write(5);
+		lcd.write(1);
 		delay(500);
 	}
 
@@ -251,23 +252,34 @@ void readPlacementDistance() {
     placement_distance = duration * 0.034 / 2;
 }
 
-void readTrashBinDistances() {
-    digitalWrite(PLASTIC_TRIG_PIN, LOW);
+void readMetalTrashBinDistance() {
     digitalWrite(METAL_TRIG_PIN, LOW);
     delayMicroseconds(2);
 
-    digitalWrite(PLASTIC_TRIG_PIN, HIGH);
     digitalWrite(METAL_TRIG_PIN, HIGH);
     delayMicroseconds(10);
 
-    digitalWrite(PLASTIC_TRIG_PIN, LOW);
     digitalWrite(METAL_TRIG_PIN, LOW);
 
-    int plastic_duration = pulseIn(PLASTIC_ECHO_PIN, HIGH);
     int metal_duration = pulseIn(METAL_ECHO_PIN, HIGH);
 
-    plastic_bin_distance = plastic_duration * 0.034 / 2;
     metal_bin_distance = metal_duration * 0.034 / 2;
+    delay(10);
+}
+
+void readPlasticTrashBinDistance() {
+    digitalWrite(PLASTIC_TRIG_PIN, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(PLASTIC_TRIG_PIN, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(PLASTIC_TRIG_PIN, LOW);
+
+    int plastic_duration = pulseIn(PLASTIC_ECHO_PIN, HIGH);
+
+    plastic_bin_distance = plastic_duration * 0.034 / 2;
+    delay(10);
 }
 
 void segregate(bool isMetal) {
