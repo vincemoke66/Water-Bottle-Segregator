@@ -17,6 +17,9 @@
 #define CAPACITIVE1_PIN 11
 #define CAPACITIVE2_PIN 12
 
+#define INDUCTIVE1_PIN A1
+#define INDUCTIVE2_PIN A0
+
 /* LCD PINS */
 /* A4 -> SDA */
 /* A5 -> SCL */
